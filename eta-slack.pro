@@ -1,13 +1,13 @@
 TEMPLATE = app
 
-QT += qml quick widgets
+QT += qml quick widgets svg
 
 SOURCES += src/main.cpp \
     src/carry.cpp \
     src/fileio.cpp \
     src/clock.cpp
 
-RESOURCES += qml.qrc
+RESOURCES += qml.qrc images.qrc
 
 
 # Default rules for deployment.
