@@ -3,7 +3,8 @@ TEMPLATE = app
 QT += qml quick widgets
 
 SOURCES += src/main.cpp \
-    src/carry.cpp
+    src/carry.cpp \
+    src/fileio.cpp
 
 RESOURCES += qml.qrc
 
@@ -12,4 +13,5 @@ RESOURCES += qml.qrc
 include(deployment.pri)
 
 HEADERS += \
-    src/carry.h
+    src/carry.h \
+    src/fileio.h
