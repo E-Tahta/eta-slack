@@ -1,5 +1,6 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
+import eta.recorder 1.0
 
 ApplicationWindow {
     flags:Qt.WindowStaysOnBottomHint |
@@ -11,18 +12,22 @@ ApplicationWindow {
     visible: true
     x: 300
     y: 100
-    width: 200
+    width: 250
     height: 200
     color: "transparent"
 
     property int bellAngle: 0
     property int cnt
-    property bool active: true
+    property bool lecture: recorder.lecture
     property bool isListOpen : false
+
+    EtaRecorder {
+        id: recorder
+
+    }
 
     Rectangle {
         id: container
-        //color: active ? "transparent" : "red"
         color: "transparent"
         anchors.centerIn: parent
         width: 80
@@ -31,6 +36,18 @@ ApplicationWindow {
         Image {
             width: parent.width; height: parent.height
             source: "images/bell.svg"
+            Text {
+                id: txtSlack
+                color: "#ffffff"
+                width: parent.width
+                text: main.lecture ? "Dersi Bitir" : "Derse Başla"
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                font.pointSize: 10
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 12
+
+            }
             transform: Rotation {
                 id: bell
                 origin.x: container.width / 2; origin.y: 0;
@@ -44,43 +61,83 @@ ApplicationWindow {
                 id: maBell
                 anchors.fill: parent
                 onClicked: {
-                    bellAngle = 45
-                    cnt = 8
-                    active = !active
-                    timer.start()
+                    if (!main.isListOpen){
+                        recorder.lecture = ! recorder.lecture;
+                        main.lecture = recorder.lecture
+                        bellAngle = 45
+                        cnt = 8
+                        timer.start()
+                    }
                 }
             }
         }
     }
 
     Rectangle {
-        id: list
+        id: listMenu
         width: main.width
         height: 0
         color: "orange"
         radius: 5
+
+        Item {
+            id: containerList
+            width: parent.width - 10
+            height: parent.height - menuButton.height
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.leftMargin: 5
+
+            Text {
+                id: txtLegend
+                width: parent.width
+                visible: main.isListOpen ? true : false
+                text: "Ders\nBaşlangıç\tSon\tTarih"
+                font.bold: true
+                font.pointSize: 8
+            }
+
+            Flickable {
+                visible: main.isListOpen ? true : false
+                anchors.top: txtLegend.bottom
+                anchors.margins: 10
+                height: main.height - txtLegend.height - menuButton.height - 10
+                width: main.width
+                ListView {
+                    id:list
+                    anchors.fill: parent
+                    model: recorder.getList()
+                    delegate: Text {
+                        text:modelData
+                    }
+                    focus: true
+                }
+            }
+        }
     }
 
     Rectangle {
-        id: menu
+        id: menuButton
         color: "orange"
-        width: 30; height: 30
+        width: 35; height: 35
         radius: 5
-        x: main.width / 2 - menu.width / 2
+        x: main.width / 2 - menuButton.width / 2
         Text {
-            id: txtMenu
+            id: txtMenuButton
+            color: "white"
             text: isListOpen ? "▲" : "▼"
             anchors.centerIn: parent
         }
 
         MouseArea {
-            id: maMenu
+            id: maMenuButton
             anchors.fill: parent
             onClicked: {
                 if (isListOpen) {
                     closeList.start()
                 } else {
                     openList.start()
+                    list.model = recorder.getList()
                 }
             }
         }
@@ -97,16 +154,16 @@ ApplicationWindow {
     ParallelAnimation {
         id: openList
         NumberAnimation {
-            target: list
+            target: listMenu
             property: "height"
             from: 0
             to: main.height
             duration: 200
             easing.type: Easing.InOutQuad
-
         }
+
         NumberAnimation {
-            target: list
+            target: listMenu
             property: "width"
             from: 0
             to: main.width
@@ -116,7 +173,7 @@ ApplicationWindow {
         }
 
         NumberAnimation {
-            target: list
+            target: listMenu
             property: "x"
             from: main.width / 2
             to: 0
@@ -124,41 +181,38 @@ ApplicationWindow {
             easing.type: Easing.InOutQuad
 
         }
-        onStarted: isListOpen = true
+        onStopped: isListOpen = true
     }
 
     ParallelAnimation {
         id: closeList
         NumberAnimation {
 
-            target: list
+            target: listMenu
             property: "height"
             from: main.height
             to: 0
             duration: 200
             easing.type: Easing.InOutQuad
-
         }
 
         NumberAnimation {
 
-            target: list
+            target: listMenu
             property: "width"
             from: main.width
             to: 0
             duration: 200
             easing.type: Easing.InOutQuad
-
         }
 
         NumberAnimation {
-            target: list
+            target: listMenu
             property: "x"
             from: 0
             to: main.width / 2
             duration: 200
             easing.type: Easing.InOutQuad
-
         }
         onStarted: isListOpen = false
     }
@@ -171,5 +225,10 @@ ApplicationWindow {
             timer.stop()
             bellAngle = 0
         }
+    }
+
+    Component.onCompleted: {
+        recorder.lecture = true
+        main.lecture = recorder.lecture
     }
 }

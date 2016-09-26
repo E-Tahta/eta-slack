@@ -38,7 +38,7 @@ void Carry::setLecture(const bool &lecture)
 {    
     if(lec == true && lecture == false) {
         if(c->isOkeyToSave()) {
-            f->writeData(startTime + " - " + c->getCurrentTime() + " "
+            f->writeData(startTime + "\t" + c->getCurrentTime() + "\t"
                          + c->getCurrentDate());
             this->getList();
         }

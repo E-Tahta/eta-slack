@@ -22,7 +22,7 @@
 #include <QTimer>
 
 #define TIMER_INTERVAL 1000
-#define MINIMUM_LECTURE_TIME_SECS 2
+#define MINIMUM_LECTURE_TIME_SECS 30
 
 Clock::Clock(QObject *parent) :
     QObject(parent),
