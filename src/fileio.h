@@ -2,6 +2,7 @@
 #define FILEIO_H
 
 #include <QObject>
+#include <QStringList>
 
 class QDir;
 class FileIO : public QObject
@@ -10,7 +11,7 @@ class FileIO : public QObject
 public:
     explicit FileIO(QObject *parent = 0);
 
-    QStringList readData() const;
+    QStringList readData();
     void writeData(const QString &data);
 
 signals:
@@ -19,6 +20,7 @@ private:
     QString filepath;
     QString filename;
     QString fullpath;
+    QStringList l;
     QDir *d;
 
 public slots:

@@ -4,7 +4,8 @@ QT += qml quick widgets
 
 SOURCES += src/main.cpp \
     src/carry.cpp \
-    src/fileio.cpp
+    src/fileio.cpp \
+    src/clock.cpp
 
 RESOURCES += qml.qrc
 
@@ -14,4 +15,5 @@ include(deployment.pri)
 
 HEADERS += \
     src/carry.h \
-    src/fileio.h
+    src/fileio.h \
+    src/clock.h

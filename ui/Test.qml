@@ -10,7 +10,7 @@ ApplicationWindow {
     y: 0
     width: 200
     height: 150
-    color: "transparent"
+    //color: "transparent"
     property bool lecture : recorder.lecture
 
     EtaRecorder {
@@ -19,14 +19,14 @@ ApplicationWindow {
     }
 
     onLectureChanged: {
-        console.log("Lecture changed to --> " + test.lecture);
+        //console.log("Lecture changed to --> " + test.lecture);
     }
     Text {
         id: text
         text: test.lecture ? "Ders Modu" : "Teneffüs Modu"
         font.family: "OpenSymbol"
         font.bold: true
-        color: "#ffffff"
+        //color: "#ffffff"
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
         font.pointSize: 12
@@ -41,9 +41,30 @@ ApplicationWindow {
         anchors.centerIn: parent
         text: test.lecture ? "Dersi Bitir" : "Derse Başla"
         onClicked: {
-            console.log("Trying to change lecture");
             recorder.lecture = ! recorder.lecture;
             test.lecture = recorder.lecture
         }
+    }
+    ScrollView {
+        id:scrollArea
+        anchors.top : btn.bottom
+
+        frameVisible: true
+        highlightOnFocus: true
+        ListView {
+            id:list
+            anchors.fill: parent
+            model: recorder.getList()
+            delegate: Text {
+                text:modelData
+            }
+            focus: true
+
+        }
+    }
+
+    Component.onCompleted: {
+        recorder.lecture = true
+        test.lecture = recorder.lecture
     }
 }

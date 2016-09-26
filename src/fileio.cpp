@@ -19,7 +19,7 @@ FileIO::FileIO(QObject *parent) :
     d = new QDir(QDir::home());
 
     if(checkFile.exists() && checkFile.isFile()) {
-        qDebug() << fullpath;
+
         QFile file(fullpath);
         if (!file.open(QIODevice::ReadOnly)) {
             qDebug() << "Could not open data file";
@@ -27,28 +27,19 @@ FileIO::FileIO(QObject *parent) :
             QTextStream in(&file);
             while (!in.atEnd()) {
                 QString line = in.readLine();
-                qDebug() << line;
+                l.append(line);
             }
         }
 
-    } else {
-        qDebug() << fullpath;
+    } else {        
         d->mkpath(filepath);
-        QFile file(fullpath);
-        /*
-        if (!file.open(QIODevice::WriteOnly)) {
-            qDebug() << "Could not create data file";
-        } else {
-            QTextStream out(&file);
-            out << "start" <<":"<<"end"<< "\n";
-        }
-        */
+        QFile file(fullpath);        
     }
 }
 
-QStringList FileIO::readData() const
+QStringList FileIO::readData()
 {
-    QStringList out;
+    l.clear();
     QFileInfo checkFile(fullpath);
     if(checkFile.exists() && checkFile.isFile()) {
         d->mkpath(filepath);
@@ -59,17 +50,15 @@ QStringList FileIO::readData() const
             QTextStream in(&file);
             while (!in.atEnd()) {
                 QString line = in.readLine();
-                out.append(line);
-                qDebug() << line;
+                l.append(line);
             }
 
         }
 
     } else {
-
-        qDebug() << "Data file does not exit or corrupted";
+        qDebug() << "Data file does not exist or corrupted";
     }
-    return out;
+    return l;
 }
 
 void FileIO::writeData(const QString &data)
