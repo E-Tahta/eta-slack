@@ -20,13 +20,35 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QtQml>
+#include <QCursor>
 #include "carry.h"
+#include "singleinstance.h"
+
+
+#define SINGLE_INSTANCE ".slack"
 
 int main(int argc, char *argv[])
 {
     qmlRegisterType<Carry>("eta.recorder",1,0,"EtaRecorder");
-
     QApplication app(argc, argv);
+
+    app.setOverrideCursor(QCursor(Qt::BlankCursor));
+
+    QString name = SINGLE_INSTANCE;
+
+    SingleInstance cInstance;
+    if(cInstance.hasPrevious(name, QCoreApplication::arguments()))
+    {
+        qDebug() << "eta-slack is allready open";
+        return 0;
+    }
+    if (cInstance.listen(name)) {
+        qDebug() << "creating single instance";
+    } else {
+        qDebug() << "couldnt create single instance aborting";
+        return 0;
+    }
+
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/ui/main.qml")));
 

@@ -36,16 +36,20 @@ ApplicationWindow {
         Image {
             width: parent.width; height: parent.height
             source: "images/bell.svg"
+            antialiasing: true
+            smooth: true
+            mipmap: true
             Text {
                 id: txtSlack
                 color: "#ffffff"
                 width: parent.width
                 text: main.lecture ? "Dersi Bitir" : "Derse Başla"
-                font.bold: true
+                verticalAlignment: Text.AlignVCenter
+                styleColor: "#000000"
                 horizontalAlignment: Text.AlignHCenter
-                font.pointSize: 10
+                font.pointSize: 9
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 12
+                anchors.bottomMargin: 14
 
             }
             transform: Rotation {
@@ -79,6 +83,9 @@ ApplicationWindow {
         height: 0
         color: "orange"
         radius: 5
+        antialiasing: true
+        smooth: true
+
 
         Item {
             id: containerList
@@ -121,6 +128,8 @@ ApplicationWindow {
         color: "orange"
         width: 35; height: 35
         radius: 5
+        antialiasing: true
+        smooth: true
         x: main.width / 2 - menuButton.width / 2
         Text {
             id: txtMenuButton
