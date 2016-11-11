@@ -1,5 +1,6 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
+import QtMultimedia 5.0
 import eta.recorder 1.0
 
 ApplicationWindow {
@@ -13,17 +14,22 @@ ApplicationWindow {
     x: 300
     y: 100
     width: 250
-    height: 200
+    height: 180
     color: "transparent"
 
     property int bellAngle: 0
     property int cnt
-    property bool lecture: recorder.lecture
+    property bool lecture: true
     property bool isListOpen : false
+    property bool confirm: false
 
     EtaRecorder {
         id: recorder
+    }
 
+    SoundEffect {
+        id: sound
+        source: "audio/bell.wav"
     }
 
     Rectangle {
@@ -66,11 +72,20 @@ ApplicationWindow {
                 anchors.fill: parent
                 onClicked: {
                     if (!main.isListOpen){
-                        recorder.lecture = ! recorder.lecture;
-                        main.lecture = recorder.lecture
-                        bellAngle = 45
-                        cnt = 8
-                        timer.start()
+
+                        if (main.lecture) {
+                            main.confirm = true
+                            openList.start()
+                        }
+
+                        else {
+                            sound.play()
+                            recorder.lecture = ! recorder.lecture;
+                            main.lecture = recorder.lecture
+                            bellAngle = 45
+                            cnt = 8
+                            timer.start()
+                        }
                     }
                 }
             }
@@ -89,6 +104,7 @@ ApplicationWindow {
 
         Item {
             id: containerList
+
             width: parent.width - 10
             height: parent.height - menuButton.height
             anchors.bottom: parent.bottom
@@ -97,18 +113,29 @@ ApplicationWindow {
 
             Text {
                 id: txtLegend
+                visible: main.isListOpen && !main.confirm ? true : false
                 width: parent.width
-                visible: main.isListOpen ? true : false
                 text: "Ders\nBaşlangıç\tSon\tTarih"
                 font.bold: true
                 font.pointSize: 8
             }
 
+            Text {
+                id: txtConfirmMessage
+                visible: main.isListOpen && main.confirm ? true : false
+                width: parent.width
+                text: "Dersi bitirmek istediğinize\nemin misiniz?"
+                font.bold: true
+                font.pointSize: 9
+                horizontalAlignment: Text.AlignHCenter
+            }
+
+
             Flickable {
-                visible: main.isListOpen ? true : false
+                visible: main.isListOpen && !main.confirm ? true : false
                 anchors.top: txtLegend.bottom
-                anchors.margins: 10
-                height: main.height - txtLegend.height - menuButton.height - 10
+                anchors.margins: 12
+                height: main.height - txtLegend.height - menuButton.height - 12
                 width: main.width
                 ListView {
                     id:list
@@ -120,6 +147,63 @@ ApplicationWindow {
                     focus: true
                 }
             }
+
+            Rectangle {
+                id: btnConfirm
+                visible: main.isListOpen && main.confirm ? true : false
+                width: parent.width
+                anchors.margins: 10
+                anchors.top: txtConfirmMessage.bottom
+                height: 45
+                color: "green"
+                radius: 10
+                Text {
+                    id: txtConfirm
+                    text: "Evet"
+                    color: "white"
+                    anchors.centerIn: parent
+                }
+                MouseArea {
+                    id: maConfirm
+                    anchors.fill: parent
+                    onClicked: {
+                        main.confirm = false
+                        closeList.start()
+                        sound.play()
+                        recorder.lecture = ! recorder.lecture;
+                        main.lecture = recorder.lecture
+                        bellAngle = 45
+                        cnt = 8
+                        timer.start()
+                    }
+                }
+            }
+
+            Rectangle {
+                id: btnCancel
+                visible: main.isListOpen && main.confirm ? true : false
+                width: parent.width
+                height: 45
+                anchors.margins: 10
+                anchors.top: btnConfirm.bottom
+                color: "red"
+                radius: 10
+                Text {
+                    id: txtCancel
+                    text: "İptal"
+                    color: "white"
+                    anchors.centerIn: parent
+                }
+                MouseArea {
+                    id: maCancel
+                    anchors.fill: parent
+                    onClicked: {
+                        main.confirm = false
+                        closeList.start()
+                    }
+                }
+            }
+
         }
     }
 
@@ -144,6 +228,9 @@ ApplicationWindow {
             onClicked: {
                 if (isListOpen) {
                     closeList.start()
+                    if (main.confirm) {
+                        main.confirm = false
+                    }
                 } else {
                     openList.start()
                     list.model = recorder.getList()
@@ -154,7 +241,7 @@ ApplicationWindow {
 
     Timer {
         id: timer
-        interval: 200; repeat: true;
+        interval: 180; repeat: true;
         onTriggered: {
             ringBell()
         }
@@ -167,7 +254,7 @@ ApplicationWindow {
             property: "height"
             from: 0
             to: main.height
-            duration: 200
+            duration: 180
             easing.type: Easing.InOutQuad
         }
 
@@ -176,7 +263,7 @@ ApplicationWindow {
             property: "width"
             from: 0
             to: main.width
-            duration: 200
+            duration: 180
             easing.type: Easing.InOutQuad
 
         }
@@ -186,7 +273,7 @@ ApplicationWindow {
             property: "x"
             from: main.width / 2
             to: 0
-            duration: 200
+            duration: 180
             easing.type: Easing.InOutQuad
 
         }
@@ -201,7 +288,7 @@ ApplicationWindow {
             property: "height"
             from: main.height
             to: 0
-            duration: 200
+            duration: 180
             easing.type: Easing.InOutQuad
         }
 
@@ -211,7 +298,7 @@ ApplicationWindow {
             property: "width"
             from: main.width
             to: 0
-            duration: 200
+            duration: 180
             easing.type: Easing.InOutQuad
         }
 
@@ -220,7 +307,7 @@ ApplicationWindow {
             property: "x"
             from: 0
             to: main.width / 2
-            duration: 200
+            duration: 180
             easing.type: Easing.InOutQuad
         }
         onStarted: isListOpen = false
@@ -241,3 +328,4 @@ ApplicationWindow {
         main.lecture = recorder.lecture
     }
 }
+

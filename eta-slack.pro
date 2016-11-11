@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets svg
+QT += qml quick widgets svg multimedia
 
 SOURCES += src/main.cpp \
     src/carry.cpp \
