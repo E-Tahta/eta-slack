@@ -32,6 +32,7 @@ public:
     void startCounting();
     bool isOkeyToSave() const;
 
+
 private:
     unsigned int count;
     bool isOk;

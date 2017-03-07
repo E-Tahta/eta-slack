@@ -52,7 +52,7 @@ FileIO::FileIO(QObject *parent) :
 
     } else {        
         d->mkpath(filepath);
-        QFile file(fullpath);        
+        QFile file(fullpath);
     }
 }
 
@@ -90,7 +90,7 @@ void FileIO::writeData(const QString &data)
         qDebug() << "Could not open data file while trying to write";
     } else {
         QTextStream out(&file);
-        out << data << "\n";
+        out << data << "\t\t" << getenv("USER") << "\n";
     }
 
 }

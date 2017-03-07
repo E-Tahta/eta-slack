@@ -20,13 +20,17 @@
 #include "carry.h"
 #include "fileio.h"
 #include "clock.h"
+#include "syslog.h"
+#include "networkmanager.h"
 #include <QDebug>
+
 Carry::Carry(QObject *parent) :
     QObject(parent),
     lec(false)
 {
     f = new FileIO(this);
     c = new Clock(this);
+    n = new NetworkManager(this);
 }
 
 bool Carry::lecture() const
@@ -38,9 +42,25 @@ void Carry::setLecture(const bool &lecture)
 {    
     if(lec == true && lecture == false) {
         if(c->isOkeyToSave()) {
+
             f->writeData(startTime + "\t" + c->getCurrentTime() + "\t"
                          + c->getCurrentDate());
             this->getList();
+
+            setlogmask (LOG_UPTO (LOG_NOTICE));
+            openlog ("eta-slack", LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL1);
+
+            message = startTime + " " + c->getCurrentTime() + " "
+                    + c->getCurrentDate() + " Mac Address: " + n->getMac()
+                    + " IP Address: " + n->getIP();
+
+            QByteArray ba = message.toLatin1();
+            const char *cmessage = ba.data();
+
+            syslog (LOG_NOTICE,"User: %s %s",getenv("USER"),cmessage  );
+            syslog (LOG_INFO, "bell rings");
+
+            closelog ();
         }
 
     } else {

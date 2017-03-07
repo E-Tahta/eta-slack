@@ -42,6 +42,7 @@ QString Clock::getCurrentDate() const
 {
     return QDateTime::currentDateTime().toString("dd/MM/yyyy");
 }
+
 void Clock::startCounting()
 {
     count = 0;

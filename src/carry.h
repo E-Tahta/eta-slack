@@ -25,6 +25,7 @@
 
 class FileIO;
 class Clock;
+class NetworkManager;
 
 class Carry : public QObject
 {
@@ -42,7 +43,9 @@ private:
     bool lec;
     FileIO *f;    
     Clock *c;
+    NetworkManager *n;
     QString startTime;
+    QString message;
 public slots:
 
 };
