@@ -1,5 +1,6 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
+import QtQuick.Window 2.2
 import QtMultimedia 5.0
 import eta.recorder 1.0
 
@@ -11,7 +12,7 @@ ApplicationWindow {
 
     id: main
     visible: true
-    x: 300
+    x: Screen.width - 50
     y: 100
     width: 250
     height: 180
