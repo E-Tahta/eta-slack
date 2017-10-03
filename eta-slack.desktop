@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=Eta-Slack
+Name[tr]=Eta-Teneffüs
+Type=Application
+Comment=It is a tool to record the start and end times of lessons.
+Comment[tr]=Derslerin başlangıç ve bitiş zamanlarını kaydetme aracıdır.
+Terminal=false
+Exec=/usr/bin/eta-slack
+Icon=/usr/share/eta/eta-slack/bell.svg
+Categories=Qt;Utility;
+GenericName=
+X-KDE-Autostart-enabled=true

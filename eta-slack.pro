@@ -11,13 +11,25 @@ SOURCES += src/main.cpp \
 
 RESOURCES += qml.qrc images.qrc
 
-
-# Default rules for deployment.
-include(deployment.pri)
-
 HEADERS += \
     src/carry.h \
     src/fileio.h \
     src/singleinstance.h \
     src/clock.h \
     src/networkmanager.h
+
+
+target.path = /usr/bin/
+
+desktop_file.files = eta-slack.desktop
+desktop_file.commands = mkdir -p /etc/xdg/autostart
+desktop_file.path = /etc/xdg/autostart/
+
+icon.files = ui/images/bell.svg
+icon.commands = mkdir -p /usr/share/eta/eta-slack
+icon.path = /usr/share/eta/eta-slack/
+
+INSTALLS += target desktop_file icon
+
+
+
