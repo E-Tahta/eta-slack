@@ -12,7 +12,7 @@ ApplicationWindow {
 
     id: main
     visible: true
-    x: Screen.width - 50
+    x: Screen.width - 75
     y: 100
     width: 250
     height: 180
