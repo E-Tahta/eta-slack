@@ -1,3 +1,9 @@
+eta-slack (0.2.2) unstable; urgency=medium
+
+  * Change position of bell
+
+ -- Hikmet Baş <hikmet.bas@pardus.org.tr>  Tue, 03 Oct 2017 08:13:11 +0000
+
 eta-slack (0.2.1) unstable; urgency=medium
 
   * Fix missing binary package dependencies
@@ -8,4 +14,4 @@ eta-slack (0.2.0) unstable; urgency=medium
 
   * Initial release.
 
- -- Hikmet Baş <hikmet.bas@pardus.org.tr> Thu, 14 Sep 2017 14:31:37 +0300
+ -- Hikmet Baş <hikmet.bas@pardus.org.tr>  Thu, 14 Sep 2017 14:31:37 +0300
