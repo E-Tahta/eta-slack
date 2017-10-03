@@ -1,3 +1,9 @@
+eta-slack (0.2.3) unstable; urgency=medium
+
+  * Change bell position
+
+ -- Hikmet Baş <hikmet.bas@pardus.org.tr>  Tue, 03 Oct 2017 08:32:39 +0000
+
 eta-slack (0.2.2) unstable; urgency=medium
 
   * Change position of bell
