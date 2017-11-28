@@ -1,3 +1,9 @@
+eta-slack (0.2.4) unstable; urgency=medium
+
+  * Fix multiuser single instance issue.
+
+ -- Hikmet Baş <hikmet.bas@pardus.org.tr>  Tue, 28 Nov 2017 17:10:10 +0000
+
 eta-slack (0.2.3) unstable; urgency=medium
 
   * Change bell position
