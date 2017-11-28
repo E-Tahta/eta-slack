@@ -17,15 +17,18 @@
  *   Free Software Foundation, Inc.,                                         *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .          *
  *****************************************************************************/
+#include "carry.h"
+#include "singleinstance.h"
+#include <signal.h>
+#include <unistd.h>
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QtQml>
+#include <QDir>
 #include <QCursor>
-#include "carry.h"
-#include "singleinstance.h"
 
 
-#define SINGLE_INSTANCE ".slack"
+#define SINGLE_INSTANCE ".slack.pid"
 
 int main(int argc, char *argv[])
 {
@@ -34,7 +37,11 @@ int main(int argc, char *argv[])
 
     app.setOverrideCursor(QCursor(Qt::BlankCursor));
 
-    QString name = SINGLE_INSTANCE;
+    QString pidName = SINGLE_INSTANCE;
+    QString homeDir = QDir::homePath();
+    QString name = homeDir.append("/").append(pidName);
+
+    qDebug() << name;
 
     SingleInstance cInstance;
     if(cInstance.hasPrevious(name, QCoreApplication::arguments()))
@@ -53,4 +60,32 @@ int main(int argc, char *argv[])
     engine.load(QUrl(QStringLiteral("qrc:/ui/main.qml")));
 
     return app.exec();
+}
+
+
+static void handle_signal(int sig)
+{
+    QString pidName = SINGLE_INSTANCE;
+    QString homeDir = QDir::homePath();
+    QString name = homeDir.append("/").append(pidName);
+    QByteArray ba = name.toLatin1();
+    Q_UNUSED(sig);
+    unlink(ba.data());
+    exit(0);
+}
+
+static int setup_unix_signal_handlers()
+{
+    struct sigaction sig;
+    sig.sa_handler = handle_signal;
+    sigemptyset(&sig.sa_mask);
+    sig.sa_flags = 0;
+    sig.sa_flags |= SA_RESTART;
+    if (sigaction(SIGINT, &sig, 0)) {
+        return 1;
+    }
+    if (sigaction(SIGTERM, &sig, 0)) {
+        return 2;
+    }
+    return 0;
 }
