@@ -1,3 +1,9 @@
+eta-slack (0.2.5) unstable; urgency=medium
+
+  * Change single instance pid path bind with user name
+
+ -- Hikmet Baş <hikmet.bas@pardus.org.tr>  Mon, 04 Dec 2017 14:12:58 +0000
+
 eta-slack (0.2.4) unstable; urgency=medium
 
   * Fix multiuser single instance issue.
