@@ -29,6 +29,7 @@
 
 
 #define SINGLE_INSTANCE ".slack.pid"
+static int setup_unix_signal_handlers();
 
 int main(int argc, char *argv[])
 {
@@ -38,22 +39,32 @@ int main(int argc, char *argv[])
     app.setOverrideCursor(QCursor(Qt::BlankCursor));
 
     QString pidName = SINGLE_INSTANCE;
-    QString homeDir = QDir::homePath();
-    QString name = homeDir.append("/").append(pidName);
+    QString username = qgetenv("USER");
+    if (username.isEmpty())
+        username = qgetenv("USERNAME");
+    QString tmpPath= "/tmp/";
+    QString pidPath = tmpPath.append(username);
 
-    qDebug() << name;
+    QDir dir(pidPath);
+    if (!dir.exists()) {
+        dir.mkpath(".");
+    }
+
+    QString name = pidPath.append("/").append(pidName);
 
     SingleInstance cInstance;
+
     if(cInstance.hasPrevious(name, QCoreApplication::arguments()))
     {
-        qDebug() << "eta-slack is allready open";
+        qDebug("eta-slack is allready running");
         return 0;
     }
+
     if (cInstance.listen(name)) {
-        qDebug() << "creating single instance";
+        qDebug() << "Creating single instance";
+        setup_unix_signal_handlers();
     } else {
-        qDebug() << "couldnt create single instance aborting";
-        return 0;
+        qFatal("Couldn't create single instance aborting");
     }
 
     QQmlApplicationEngine engine;
@@ -62,12 +73,15 @@ int main(int argc, char *argv[])
     return app.exec();
 }
 
-
 static void handle_signal(int sig)
 {
     QString pidName = SINGLE_INSTANCE;
-    QString homeDir = QDir::homePath();
-    QString name = homeDir.append("/").append(pidName);
+    QString username = qgetenv("USER");
+    if (username.isEmpty())
+        username = qgetenv("USERNAME");
+    QString tmpPath= "/tmp/";
+    QString pidPath = tmpPath.append(username);
+    QString name = pidPath.append("/").append(pidName);
     QByteArray ba = name.toLatin1();
     Q_UNUSED(sig);
     unlink(ba.data());
@@ -89,3 +103,4 @@ static int setup_unix_signal_handlers()
     }
     return 0;
 }
+
