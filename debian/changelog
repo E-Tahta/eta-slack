@@ -1,3 +1,9 @@
+eta-slack (0.2.9) unstable; urgency=medium
+
+  * Add Conflicts, Replaces, and Provides fields to control file
+
+ -- Hikmet Baş <hikmet.bas@pardus.org.tr>  Thu, 25 Oct 2018 08:39:18 +0000
+
 eta-slack (0.2.8) unstable; urgency=medium
 
   * Pardus CI integration
