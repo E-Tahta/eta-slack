@@ -1,4 +1,3 @@
 # eta-slack
 
-
-**Qml file I/O wizard**
+This repository is deprecated now we are using eta-widget-slack.
